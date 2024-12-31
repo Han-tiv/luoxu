@@ -102,3 +102,12 @@ reindex index message_idx;
 ====
 
 * [2022年06月23日](update-2022-06-23.md)，采用分区表来提升部分查询的性能。需要更新配置文件及数据库。
+
+# .env 文件示例
+```
+TELEGRAM_API_ID=Your_API_ID
+TELEGRAM_API_HASH=Your_API_HASH
+POSTGRES_USER=Your_Postgres_User
+POSTGRES_PASSWORD=Your_Postgres_Password
+POSTGRES_DB=Your_Postgres_DB
+```
