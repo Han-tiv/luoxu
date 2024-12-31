@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  luoxu:
+    build: .
+    ports:
+      # 如果 luoxu 需要暴露端口，可以在这里映射
+      # - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # 从 .env 文件或直接在此处设置环境变量
+      TELEGRAM_API_ID: ${TELEGRAM_API_ID}
+      TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    volumes:
+      # 可以挂载本地目录到容器中，例如配置文件
+      # - ./config.toml:/app/config.toml
+      .:/app  # 将当前目录挂载到容器中
+
+  postgres:
+    image: ankane/pgroonga:latest  # 使用包含 pgroonga 的 PostgreSQL 镜像
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dbsetup.sql:/docker-entrypoint-initdb.d/dbsetup.sql # 自动执行 SQL 脚本
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
