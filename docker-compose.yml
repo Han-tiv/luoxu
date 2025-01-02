@@ -1,10 +1,9 @@
-version: '3.8'
 services:
   luoxu:
     build: .
     ports:
       # 如果 luoxu 需要暴露端口，可以在这里映射
-      # - "8000:8000"
+      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -16,10 +15,10 @@ services:
     volumes:
       # 可以挂载本地目录到容器中，例如配置文件
       # - ./config.toml:/app/config.toml
-      .:/app  # 将当前目录挂载到容器中
+        - .:/app  # 将当前目录挂载到容器中
 
   postgres:
-    image: ankane/pgroonga:latest  # 使用包含 pgroonga 的 PostgreSQL 镜像
+    image: groonga/pgroonga:latest # 使用包含 pgroonga 的 PostgreSQL 镜像
     ports:
       - "5432:5432"
     environment:
